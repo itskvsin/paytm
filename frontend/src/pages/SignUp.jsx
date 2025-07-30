@@ -5,12 +5,15 @@ import Button from "../Components/Button";
 import { Heading } from "../Components/Heading";
 import InputBox from "../Components/InputBox";
 import SubHeading from "../Components/SubHeading";
+import { useNavigate } from "react-router";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   return (
     <div className="bg-slate-300 h-screen flex justify-center items-center rounded-lg capitalize">
@@ -48,8 +51,8 @@ export default function SignUp() {
           />
           <div className="pt-4">
             <Button
-              onClick={() => {
-                axios({
+              onClick={async () => {
+                const response = await axios({
                   method: "post",
                   url: "http://localhost:3000/api/v1/user/signup",
                   data: {
@@ -59,6 +62,10 @@ export default function SignUp() {
                     password,
                   },
                 });
+
+                localStorage.setItem("token", response.data.token)
+
+                navigate("/dashboard")
               }}
               label={"Sign Up"}
             />

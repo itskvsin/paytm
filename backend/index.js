@@ -6,7 +6,6 @@ const app = express()
 const corsOption = {
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
 }
 app.use(cors(corsOption))
 app.use(express.json())

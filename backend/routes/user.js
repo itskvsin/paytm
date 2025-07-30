@@ -59,8 +59,8 @@ router.post("/signup", async (req, res) => {
 
   await Account.create({
     userId,
-    balance: 1 + Math.random() * 10000
-  })
+    balance: 1 + Math.random() * 10000,
+  });
 
   const token = jwt.sign(
     {
@@ -143,10 +143,10 @@ router.put("/updateUser", authMidleware, async (req, res) => {
   });
 });
 
-router.post("/bulk", authMidleware, async (req, res) => {
+router.get("/bulk", async (req, res) => {
   const filter = req.query.filter || "";
 
-  const users = await User.findOne({
+  const users = await User.find({
     $or: [
       {
         firstName: {
@@ -161,24 +161,17 @@ router.post("/bulk", authMidleware, async (req, res) => {
     ],
   });
 
-  if (!users) {
-    return res.status(400).json({
-      msg: "User not found",
-    });
-  }
-
-  return res.status(200).json({
-    user: users.map((user) => {
-      username: user.username;
-      firstName: user.firstName;
-      lastName: user.lastName;
-      _id: user._id;
-    }),
+  res.json({
+    user: users.map((user) => ({
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      _id: user._id,
+    })),
   });
 });
 
 router.get("/getUser", authMidleware, async (req, res) => {
-
   const userId = req.userId;
 
   const user = await User.findById({
@@ -198,9 +191,8 @@ router.get("/getUser", authMidleware, async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       _id: user._id,
-    }
+    },
   });
-
 });
 
 module.exports = router;
